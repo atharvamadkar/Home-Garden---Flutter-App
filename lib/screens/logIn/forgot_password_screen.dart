@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:home_garden/constants/app_colors.dart';
 import 'package:home_garden/screens/logIn/sign_in_screen.dart';
+import 'package:home_garden/services/auth/bloc/auth_event.dart';
 import 'package:home_garden/widgets/long_button.dart';
 import 'package:home_garden/widgets/rounded_input_field.dart';
+
+import '../../services/auth/bloc/auth_bloc.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -79,8 +83,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     const SizedBox(
                       height: 8,
                     ),
-                    const LongButton(
+                    LongButton(
                       text: "Send Password Reset Link",
+                      onTap: () async {
+                        final email = _controller.text;
+                        context.read<AuthBloc>().add(
+                              AuthEventForgotPassword(email: email),
+                            );
+                      },
                     ),
                     TextButton(
                       onPressed: () {

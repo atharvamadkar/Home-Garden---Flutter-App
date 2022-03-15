@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:home_garden/constants/app_colors.dart';
 import 'package:home_garden/screens/logIn/create_user_screen.dart';
+import 'package:home_garden/services/auth/bloc/auth_event.dart';
 import 'package:home_garden/widgets/long_button.dart';
 import 'package:home_garden/widgets/rounded_input_field.dart';
-import 'package:home_garden/widgets/text_field_container.dart';
 
+import '../../services/auth/bloc/auth_bloc.dart';
 import '../../widgets/password_input_field.dart';
 import 'forgot_password_screen.dart';
 
@@ -105,8 +107,18 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(
                       height: 24,
                     ),
-                    const LongButton(
+                    LongButton(
                       text: "Sign In",
+                      onTap: () async {
+                        final email = _emailController.text;
+                        final password = _passwordController.text;
+                        context.read<AuthBloc>().add(
+                              AuthEventLogin(
+                                email: email,
+                                password: password,
+                              ),
+                            );
+                      },
                     ),
                     const SizedBox(
                       height: 20,

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:home_garden/services/auth/bloc/auth_event.dart';
 import 'package:home_garden/widgets/long_button.dart';
 import 'package:home_garden/widgets/password_input_field.dart';
 import 'package:home_garden/widgets/rounded_input_field.dart';
 
 import '../../constants/app_colors.dart';
+import '../../services/auth/bloc/auth_bloc.dart';
 import 'sign_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -99,7 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     RoundedInputField(
                       hintText: "Email",
                       icon: Icons.mail_rounded,
-                      controller: _nameController,
+                      controller: _emailController,
                       onChanged: (value) {},
                     ),
                     PasswordInputField(
@@ -112,8 +115,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const LongButton(
+                    LongButton(
                       text: "Sign Up",
+                      onTap: () async {
+                        final email = _emailController.text;
+                        final password = _passwordController.text;
+                        final passRepeat = _repeatPasswordController.text;
+                        final fullName = _nameController.text;
+
+                        if (password != passRepeat) return;
+
+                        context.read<AuthBloc>().add(
+                              AuthEventRegister(
+                                email: email,
+                                password: password,
+                                fullName: fullName,
+                              ),
+                            );
+                      },
                     ),
                     Expanded(
                       child: Container(),
